@@ -1,0 +1,10 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+}
+
+#invitationPreview {
+    display: block;
+    max-width: 800px;
+    margin-top: 20px;
+}
