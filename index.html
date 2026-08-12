@@ -25,30 +25,56 @@
                 </h2>
             </div>
 
-            <section class="sidebar-section">
-                <h3>
-                    <span class="step">1</span>
-                    Upload Template
-                </h3>
+            <section class="upload-section">
+                <div class="upload-title">
+                     <span class="step">1</span>
+                     <h3>Upload Template</h3>
+
+                </div>
+                
+                <label class="upload-box" for="invitationInput">
+                    <div class="upload-icon">▧</div>
+                    <div class="upload-text">
+        Click to Upload
+                    </div>
+
+                    <div class="upload-subtext">
+        Image
+                    </div>
+                    
+                </label>
 
                 <input 
         type="file" 
         id="invitationInput" 
         accept="image/*"
+        hidden
     >
             </section>
+            <section class= "data-source-section">
+                <div class="data-source-title">
+                     <span class="step">2</span>
+                     <h3>Data source</h3>
 
-            <section class="sidebar-section">
-                
-                <h3>
-                    <span class="step">2</span>
-                    Data source
-                </h3>
+                </div>
+
+                <label class="csv-upload-button" for="csvInput">
+                     <span>↑</span>
+                     <span>Upload CSV</span>
+                </label>
+
                 <input
                     type="file"
                     id="csvInput"
                     accept=".csv"
+                    hidden
                 >
+            </section>
+
+            <section class="sidebar-section">
+                
+                
+               
                 <div id="namesList"></div>
 
             </section>
