@@ -4,48 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Invitation Generator</title>
+    <title>Endorphins Art Labs</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <h1>Invitation Generator</h1>
+    <header class="topbar">
+        <h1>Endorphins Art Labs</h1>
+    </header>
 
-    <h2>Upload your invitation</h2>
+    <div class="app">
+        <aside class="sidebar">
+          
+            <div class="sidebar-title">
+                <h2>
+                    Invitations<br>
+                    generator
+                </h2>
+            </div>
 
-    <input 
+            <section class="sidebar-section">
+                <h3>
+                    <span class="step">1</span>
+                    Upload Template
+                </h3>
+
+                <input 
         type="file" 
         id="invitationInput" 
         accept="image/*"
     >
+            </section>
 
-    <img 
+            <section class="sidebar-section">
+                
+                <h3>
+                    <span class="step">2</span>
+                    Data source
+                </h3>
+                <input
+                    type="file"
+                    id="csvInput"
+                    accept=".csv"
+                >
+                <div id="namesList"></div>
+
+            </section>
+
+             <div class="generate-container">
+                <button id="generateButton">
+                    Generate Preview
+                </button>
+
+                <button id="downloadButton">
+                         Download ZIP
+                </button>
+            </div>
+        </aside>
+
+        <main class="workspace">
+            <div class="preview">
+                <div class="preview-header">
+                    Invitation Preview 
+                </div>
+
+                <div class="invitation-area">
+                     <img 
         id="invitationPreview" 
         alt="Invitation preview"
     >
 
-    <p id="positionText">Click on the invitation to choose where do you want to put the name.</p>
-
-    <button id="generateButton">
-    Generate Preview</button>
-
-    <button id="downloadButton">
-    Download ZIP
-</button>
+    <p id="positionText">Click on the invitation to choose where
+         do you want to put the name.
+    </p>
 
     <canvas id="invitationCanvas"></canvas>
+                </div>
+                </div>
 
-    <h2>Upload guest names</h2>
+        </main>
+    </div>
 
-    <input
-    type="file"
-    id="csvInput"
-    accept=".csv"
-    >
-
-    <div id="namesList"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.5.3/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
