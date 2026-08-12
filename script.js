@@ -1,7 +1,11 @@
+let generatedInvitations = [];
+let guestNames = [];
 const canvas = document.getElementById("invitationCanvas");
 const ctx = canvas.getContext("2d");
 const input = document.getElementById("invitationInput");
 const image = document.getElementById("invitationPreview");
+const downloadButton = document.getElementById("downloadButton");
+
 
 input.addEventListener("change", function () {
 
@@ -40,7 +44,7 @@ image.addEventListener("click", function(event) {
      namePositionX = originalX;
      namePositionY = originalY;
 
-     postionText.textContent =
+     positionText.textContent =
      `Original position: X = ${Math.round(originalX)}, Y = ${Math.round(originalY)}`;
 
 
@@ -66,19 +70,110 @@ csvInput.addEventListener("change", function () {
 
             console.log(results.data);
             namesList.innerHTML = "";
+            guestNames = [];
             results.data.forEach(function(row){
                 const name = row.Name;
                 console.log(name);
                 if (name){
+                    guestNames.push(name);
                     const paragraph = document.createElement("p");
                     paragraph.textContent = name;
                     namesList.appendChild(paragraph);
                 }
             })
                
-            
+            console.log("Guest Nmaes:", guestNames);
         }
     });
 
 });
 
+function generateInvitation(name) {
+
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+
+    ctx.drawImage(
+        image,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.font = "50px Arial";
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+        name,
+        namePositionX,
+        namePositionY
+    );
+
+    const generatedImage = canvas.toDataURL("image/png");
+
+    generatedInvitations.push({
+        name: name,
+        image: generatedImage
+    });
+}
+
+const generateButton = document.getElementById("generateButton");
+
+generateButton.addEventListener("click", function () {
+
+    if (guestNames.length === 0) {
+        alert("Please upload a CSV with guest names first.");
+        return;
+    }
+
+    generatedInvitations = [];
+
+    guestNames.forEach(function(name) {
+
+        console.log("Generating invitation for:", name);
+
+        generateInvitation(name);
+
+    });
+
+     console.log("Generated invitations:", generatedInvitations);
+
+});
+
+downloadButton.addEventListener("click", function () {
+
+    if (generatedInvitations.length === 0) {
+        alert("Please generate the invitations first.");
+        return;
+    }
+
+    const zip = new JSZip();
+
+    generatedInvitations.forEach(function(invitation) {
+
+        const imageData = invitation.image.split(",")[1];
+
+        zip.file(
+            `${invitation.name}.png`,
+            imageData,
+            { base64: true }
+        );
+
+    });
+
+    zip.generateAsync({ type: "blob" })
+        .then(function(content) {
+
+            const downloadLink = document.createElement("a");
+
+            downloadLink.href = URL.createObjectURL(content);
+
+            downloadLink.download = "invitations.zip";
+
+            downloadLink.click();
+
+            URL.revokeObjectURL(downloadLink.href);
+        });
+});
