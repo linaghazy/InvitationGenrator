@@ -69,26 +69,27 @@
                     accept=".csv"
                     hidden
                 >
-            </section>
-
-            <section class="sidebar-section">
-                
-                
-               
+                <div class="csv-file-box">
+                    <span class="recipients">
+                        RECIPIENTS
+                    </span>
+                    <span <span class="loaded-count" id="loadedCount">0 loaded</span>
+                    </span>
+                </div>
                 <div id="namesList"></div>
-
             </section>
+
 
              <div class="generate-container">
-                <button id="generateButton">
-                    Generate Preview
+                <<button id="generateButton" class="generate-box">
+                  <span class="download-icon">↓</span>
+                  <span>Generate &amp; Download</span>
                 </button>
 
-                <button id="downloadButton">
-                         Download ZIP
-                </button>
             </div>
         </aside>
+
+
 
         <main class="workspace">
             <div class="preview">
@@ -102,12 +103,12 @@
         alt="Invitation preview"
     >
 
-    <p id="positionText">Click on the invitation to choose where
-         do you want to put the name.
-    </p>
+    
 
     <canvas id="invitationCanvas"></canvas>
-                </div>
+                
+                <div id="nameOverLay">
+                    
                 </div>
 
         </main>
