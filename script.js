@@ -4,7 +4,7 @@ const canvas = document.getElementById("invitationCanvas");
 const ctx = canvas.getContext("2d");
 const input = document.getElementById("invitationInput");
 const image = document.getElementById("invitationPreview");
-const downloadButton = document.getElementById("downloadButton");
+
 
 
 input.addEventListener("change", function () {
@@ -55,6 +55,7 @@ image.addEventListener("click", function(event) {
 
 const csvInput = document.getElementById("csvInput");
 const namesList = document.getElementById("namesList");
+const loadedCount = document.getElementById("loadedCount");
 
 csvInput.addEventListener("change", function () {
 
@@ -76,13 +77,24 @@ csvInput.addEventListener("change", function () {
                 console.log(name);
                 if (name){
                     guestNames.push(name);
-                    const paragraph = document.createElement("p");
-                    paragraph.textContent = name;
-                    namesList.appendChild(paragraph);
+                    const nameItem = document.createElement("div");
+                    nameItem.className = "name-item";
+
+                    const dot = document.createElement("span");
+                    dot.className = "name-dot";
+
+                    const nameText = document.createElement("span");
+                    nameText.className = "name-text";
+                    nameText.textContent = name;
+
+                    nameItem.appendChild(dot);
+                    nameItem.appendChild(nameText);
+
+                    namesList.appendChild(nameItem);
                 }
             })
-               
-            console.log("Guest Nmaes:", guestNames);
+             loadedCount.textContent = `${guestNames.length} loaded`;  
+            console.log("Guest Names:", guestNames);
         }
     });
 
@@ -128,6 +140,11 @@ generateButton.addEventListener("click", function () {
         return;
     }
 
+    if (namePositionX === null || namePositionY === null) {
+        alert("Please click on the invitation to choose where to put the name.");
+        return;
+    }
+
     generatedInvitations = [];
 
     guestNames.forEach(function(name) {
@@ -139,17 +156,8 @@ generateButton.addEventListener("click", function () {
     });
 
      console.log("Generated invitations:", generatedInvitations);
-
-});
-
-downloadButton.addEventListener("click", function () {
-
-    if (generatedInvitations.length === 0) {
-        alert("Please generate the invitations first.");
-        return;
-    }
-
-    const zip = new JSZip();
+     
+     const zip = new JSZip();
 
     generatedInvitations.forEach(function(invitation) {
 
@@ -172,8 +180,17 @@ downloadButton.addEventListener("click", function () {
 
             downloadLink.download = "invitations.zip";
 
+            document.body.appendChild(downloadLink);
+
             downloadLink.click();
 
+            document.body.removeChild(downloadLink);
+
             URL.revokeObjectURL(downloadLink.href);
+
         });
+
+     image.style.display = "none";
+     canvas.style.display = "block";
 });
+
