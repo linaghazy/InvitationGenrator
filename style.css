@@ -648,4 +648,80 @@ body {
 
         object-fit: contain;
     }
+
+    .single-name-section {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.single-name-section label {
+    color: #ffffff;
+
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.single-name-input-row {
+    width: 100%;
+
+    display: flex;
+    gap: 8px;
+}
+
+#singleNameInput {
+    flex: 1;
+
+    min-width: 0;
+    height: 42px;
+
+    padding: 8px 12px;
+
+    background: #121212;
+
+    border: 1px solid #444748;
+    border-radius: 2px;
+
+    color: #ffffff;
+
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+
+    box-sizing: border-box;
+}
+
+#singleNameInput::placeholder {
+    color: #888888;
+}
+
+#singleNameInput:focus {
+    outline: none;
+    border-color: #ffffff;
+}
+
+#addNameButton {
+    height: 42px;
+
+    padding: 8px 16px;
+
+    background: #262626;
+
+    border: 1px solid #444748;
+    border-radius: 2px;
+
+    color: #ffffff;
+
+    font-family: Inter, sans-serif;
+    font-size: 14px;
+
+    cursor: pointer;
+}
+
+#addNameButton:hover {
+    background: #353535;
+}
 }

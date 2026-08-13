@@ -1,5 +1,7 @@
 let generatedInvitations = [];
 let guestNames = [];
+const singleNameInput = document.getElementById("singleNameInput");
+const addNameButton = document.getElementById("addNameButton");
 const canvas = document.getElementById("invitationCanvas");
 const ctx = canvas.getContext("2d");
 const input = document.getElementById("invitationInput");
@@ -64,14 +66,18 @@ csvInput.addEventListener("change", function () {
     if (!file) {
         return;
     }
+    singleNameInput.value = "";
+
 
     Papa.parse(file, {
         header: true,
         complete: function (results) {
 
             console.log(results.data);
+
             namesList.innerHTML = "";
             guestNames = [];
+
             results.data.forEach(function(row){
                 const name = row.Name;
                 console.log(name);
@@ -98,6 +104,41 @@ csvInput.addEventListener("change", function () {
         }
     });
 
+});
+
+addNameButton.addEventListener("click", function () {
+
+    const name = singleNameInput.value.trim();
+
+    if (!name) {
+        alert("Please enter a name.");
+        return;
+    }
+
+    guestNames = [name];
+
+    namesList.innerHTML = "";
+
+   
+    const nameItem = document.createElement("div");
+    nameItem.className = "name-item";
+
+    const dot = document.createElement("span");
+    dot.className = "name-dot";
+
+    const nameText = document.createElement("span");
+    nameText.className = "name-text";
+    nameText.textContent = name;
+
+    nameItem.appendChild(dot);
+    nameItem.appendChild(nameText);
+
+    namesList.appendChild(nameItem);
+
+    
+    singleNameInput.value = "";
+
+    console.log("Guest Names from manual input:", guestNames);
 });
 
 function generateInvitation(name) {
@@ -135,18 +176,22 @@ const generateButton = document.getElementById("generateButton");
 
 generateButton.addEventListener("click", function () {
 
+    // Check if there is a name
     if (guestNames.length === 0) {
-        alert("Please upload a CSV with guest names first.");
+        alert("Please upload a CSV or enter a guest name first.");
         return;
     }
 
+    // Check if the user selected a position
     if (namePositionX === null || namePositionY === null) {
         alert("Please click on the invitation to choose where to put the name.");
         return;
     }
 
+    // Clear previous generated invitations
     generatedInvitations = [];
 
+    // Generate invitation for every guest
     guestNames.forEach(function(name) {
 
         console.log("Generating invitation for:", name);
@@ -155,42 +200,79 @@ generateButton.addEventListener("click", function () {
 
     });
 
-     console.log("Generated invitations:", generatedInvitations);
-     
-     const zip = new JSZip();
+    console.log("Generated invitations:", generatedInvitations);
 
-    generatedInvitations.forEach(function(invitation) {
 
-        const imageData = invitation.image.split(",")[1];
+    // =====================================
+    // ONE NAME → DOWNLOAD PNG
+    // =====================================
 
-        zip.file(
-            `${invitation.name}.png`,
-            imageData,
-            { base64: true }
-        );
+    if (generatedInvitations.length === 1) {
 
-    });
+        const invitation = generatedInvitations[0];
 
-    zip.generateAsync({ type: "blob" })
-        .then(function(content) {
+        const downloadLink = document.createElement("a");
 
-            const downloadLink = document.createElement("a");
+        downloadLink.href = invitation.image;
 
-            downloadLink.href = URL.createObjectURL(content);
+        downloadLink.download = `${invitation.name}.png`;
 
-            downloadLink.download = "invitations.zip";
+        document.body.appendChild(downloadLink);
 
-            document.body.appendChild(downloadLink);
+        downloadLink.click();
 
-            downloadLink.click();
+        document.body.removeChild(downloadLink);
 
-            document.body.removeChild(downloadLink);
+        console.log("Downloaded:", invitation.name + ".png");
 
-            URL.revokeObjectURL(downloadLink.href);
+    }
+
+
+    // =====================================
+    // MULTIPLE NAMES → DOWNLOAD ZIP
+    // =====================================
+
+    else {
+
+        const zip = new JSZip();
+
+        generatedInvitations.forEach(function(invitation) {
+
+            const imageData = invitation.image.split(",")[1];
+
+            zip.file(
+                `${invitation.name}.png`,
+                imageData,
+                { base64: true }
+            );
 
         });
 
-     image.style.display = "none";
-     canvas.style.display = "block";
-});
+        zip.generateAsync({ type: "blob" })
+            .then(function(content) {
 
+                const downloadLink = document.createElement("a");
+
+                downloadLink.href =
+                    URL.createObjectURL(content);
+
+                downloadLink.download = "invitations.zip";
+
+                document.body.appendChild(downloadLink);
+
+                downloadLink.click();
+
+                document.body.removeChild(downloadLink);
+
+                URL.revokeObjectURL(downloadLink.href);
+
+                console.log("Downloaded invitations.zip");
+
+            });
+    }
+
+    // Show generated canvas
+    image.style.display = "none";
+    canvas.style.display = "block";
+
+});
